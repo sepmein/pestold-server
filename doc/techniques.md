@@ -1,18 +1,19 @@
-css
-    bootstrap
-    less
++ css
+  + bootstrap
+  + less
 
-javascript
-    angular.js
++ javascript
+  + angular.js
 
-node.js
-    koa.js
-    koa-static
-    mongoose
-  dev:
-    gulp.js
-    mocha
++ node.js
+  + koa.js
+  + koa-static
+  + mongoose
 
-mongodb
++ dev:
+  + gulp.js
+  + mocha
 
-git
++ mongodb
+
++ git
