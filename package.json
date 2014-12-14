@@ -1,0 +1,29 @@
+{
+  "name": "pestold-server",
+  "version": "0.0.0",
+  "description": "pestold node.js server side",
+  "main": "index.js",
+  "dependencies": {
+    "koa": "^0.13.0",
+    "mongodb": "^1.4.23"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sepmein/pestold-server"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "author": "Spencer Zhang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sepmein/pestold-server/issues"
+  },
+  "homepage": "https://github.com/sepmein/pestold-server",
+  "devDependencies": {
+    "mocha": "^2.0.1"
+  }
+}
