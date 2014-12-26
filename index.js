@@ -12,7 +12,7 @@ var koa = require('koa'),
   router = require('koa-router'),
   parse = require('co-body'),
   jwt = require('jsonwebtoken'),
-  Promise = require('bluebird'),
+  // Promise = require('bluebird'),
   app = koa();
 
 // settings
@@ -29,7 +29,7 @@ const secret = require('./config/secret')
 // see:
 // https://github.com/LearnBoost/mongoose/issues/2177
 // https://github.com/petkaantonov/bluebird/blob/master/API.md#promisification
-var mongoose = Promise.promisifyAll(require("mongoose"));
+var mongoose = require("mongoose");
 
 mongoose.connect('mongodb://localhost:27017/pestold');
 var db = mongoose.connection;
@@ -70,12 +70,55 @@ app.use(router(app));
  * authentication
  */
 app.post('/auth', function*(next) {
-  var user =
+  var requestBody =
     yield parse(this);
-  // User.verify(user, function(){
 
-  // })
+  var userName = requestBody.userName,
+    password = requestBody.password;
+
+  var context = this;
+
+  var found =
+    yield User.findOne({
+      userName: userName,
+      password: password
+    }).exec()
+    .on('err', function(e) {
+      context.throw(500, e);
+    });
+
+  if (found) {
+    this.body = {
+      status: 'ok',
+      user: found.userName,
+      token: found.token
+    }
+  } else {
+    this.throw(404, 'Username or password wrong')
+  }
 });
+
+
+app.post('/signup', function*(next) {
+  var requestBody =
+    yield parse(this);
+  var user = new User({
+    userName: requestBody.userName,
+    password: requestBody.password
+  });
+
+  // use jwt to generate token
+  user.token = jwt.sign(requestBody, secret);
+
+  var savedUser =
+    yield user.save();
+  delete savedUser.password;
+  this.body = savedUser;
+});
+
+/**
+ * user
+ */
 
 app.get('/user/:id', function*(next) {
   var token = this.header.token;
@@ -95,30 +138,16 @@ app.get('/user/:id', function*(next) {
   }
 })
 
-app.post('/signup', function*(next) {
-  var requestBody =
-    yield parse(this);
-  var user = new User({
-    name: requestBody.name,
-    password: requestBody.password
-  });
+/**
+ * organization
+ */
 
-  // use jwt to generate token
-  user.token = jwt.sign(requestBody, secret);
+app.get('/org/:id')
 
-  var context = this;
-  var saveUser = user.saveAsync(user)
-  .then(function(err, product, numberAffected){
-    console.log('err',err);
-    console.log('product',product);
-    console.log('numberAffected',numberAffected);
-  })
-  .catch(mongoose.Error, function(e) {
-    context.throw(400, e.errors.name.message);
-  }).error(function(e) {
-    context.throw(500, e);
-  });
+app.post('/org')
 
-});
+app.get('/org/list')
+
+app.get('/org/:id/staff')
 
 app.listen(4000);

@@ -1,4 +1,5 @@
-var mongoose = require('mongoose')
+var mongoose = require('mongoose'),
+	ObjectId = mongoose.Schema.Types.ObjectId;
 
 var organizationSchema = mongoose.Schema({
 	type: {
@@ -20,6 +21,9 @@ var organizationSchema = mongoose.Schema({
 		type: Date,
 		default: Date.now
 	},
+	directSuperiorDepartment: ObjectId,
+	personInCharge: [ObjectId],
+	personInAudit: ObjectId,
 	pcoInfo: {
 		grade: {
 			type: String,

@@ -1,8 +1,8 @@
 var mongoose = require('mongoose'),
-ObjectId = mongoose.Schema.Types.ObjectId;
+	ObjectId = mongoose.Schema.Types.ObjectId;
 
 var userSchema = mongoose.Schema({
-	name: {
+	userName: {
 		type: String,
 		required: true
 	},
@@ -11,9 +11,14 @@ var userSchema = mongoose.Schema({
 		required: true
 	},
 	token: String,
-	createdAt: Date,
-	isPro: Boolean,
-	approvedBy: ObjectId,
+	createdAt: {
+		type: Date,
+		default: Date.now
+	},
+	isPro: {
+		type: Boolean,
+		required: true
+	},
 	organization: ObjectId,
 	administrativeRanking: {
 		type: String,
@@ -24,7 +29,16 @@ var userSchema = mongoose.Schema({
 	},
 	jobTitle: {
 		type: String
-	}
+	},
+	approvedBy: ObjectId,
+	approved: Boolean,
+	pcoUserInfo: {
+		operationRank: {
+			type: String,
+			enum: ['无', '初', '中', '高']
+		}
+	},
+	systemAdmin: Boolean
 });
 
 userSchema.statics.findByToken = function*(token) {
