@@ -4,13 +4,13 @@
   "description": "pestold node.js server side",
   "main": "index.js",
   "dependencies": {
-    "bluebird": "^2.3.11",
-    "co": "^4.0.1",
-    "co-body": "^1.0.0",
-    "jsonwebtoken": "^1.3.0",
-    "koa": "^0.13.0",
-    "koa-router": "^3.7.0",
-    "mongoose": "^3.8.20"
+    "co": "latest",
+    "co-body": "latest",
+    "jsonwebtoken": "latest",
+    "koa": "latest",
+    "koa-router": "latest",
+    "mongoose": "unstable",
+    "bcrypt": "latest"
   },
   "scripts": {
     "test": "mocha",

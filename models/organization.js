@@ -1,3 +1,5 @@
+'use strict';
+
 var mongoose = require('mongoose'),
 	ObjectId = mongoose.Schema.Types.ObjectId;
 
@@ -53,4 +55,4 @@ var organizationSchema = mongoose.Schema({
 	}
 });
 
-mongoose.model('organization', organizationSchema);
+mongoose.model('Organization', organizationSchema);
