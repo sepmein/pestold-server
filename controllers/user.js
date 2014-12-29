@@ -7,9 +7,11 @@ var User = require('mongoose').model('User');
 
 exports.id = function*() {
     let user =
-        yield User.findOne(this.validate.userName).exec();
+        yield User
+            .findOne(this.validate.userName)
+            .select({password: 0})
+            .exec();
     if (user) {
-        delete user.password;
         if (user._id.toString() === this.params.id) {
             this.body = user;
         } else {
