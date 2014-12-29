@@ -6,7 +6,8 @@
 var jwt = require('../lib/jwt');
 
 exports.verify = function * (next) {
-    let token = this.header.token;
+    let bearer = this.header.authorization;
+    let token = bearer.split(' ')[1];
     if (!token) {
         this.throw(401, 'unauthorized');
     } else {
