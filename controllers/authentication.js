@@ -37,16 +37,19 @@ exports.auth = function*() {
                 });
             } else {
                 //console.log('password not match');
-                this.response.status = 401;
+                this.status = 401;
                 this.body = {message: 'password not match'};
             }
         } catch (e) {
             console.log('bcrypt compare failed: ', e);
-            this.throw(500, e);
+            //this.throw(500, e);
+            this.status = 500;
+            this.body = {message: 'Server Error: bcrypt compare error'};
         }
 
     } else {
-        this.throw(401, 'User not exist');
+        this.status = 401;
+        this.body = {message: 'User not exist'};
     }
 };
 
@@ -66,7 +69,8 @@ exports.signup = function*() {
         this.body = user.token;
     }
     catch (error) {
-        this.throw(400, error);
+        this.status = 400;
+        this.body = {message: error.message};
     }
 };
 

@@ -9,7 +9,8 @@ exports.verify = function * (next) {
     let bearer = this.header.authorization;
     let token = bearer.split(' ')[1];
     if (!token) {
-        this.throw(401, 'unauthorized');
+        this.status = 401;
+        this.body = {message: 'unauthorized, required token'};
     } else {
         try {
             let validate = yield jwt.verify(token);
@@ -17,7 +18,8 @@ exports.verify = function * (next) {
             yield next;
         }
         catch (e) {
-            this.throw(401, e);
+            this.status = 401;
+            this.body = {message: e.message};
         }
     }
 };
