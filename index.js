@@ -30,8 +30,6 @@ db.on('error', function (err) {
     app.emit('error', new Error('db connect error: ', err));
 });
 db.once('open', function () {
-
-
     app.listen(4000);
     console.log('app started!');
 });
@@ -42,23 +40,22 @@ app.use(function*(next) {
         this.db = db;
         yield next;
     } else {
-        this.status = 500;
+        this.response.status = 500;
         this.body = {
             message: '服务器数据库无法连接'
         };
     }
 });
 
-app.on('error', function (error) {
-    console.error(error);
-});
+//app.on('error', function (error) {
+//    console.error(error);
+//});
 
 /**
  * require models
  */
 
 var modelPath = path.join(__dirname, 'models');
-
 require('fs').readdirSync(modelPath).forEach(function (file) {
     if (~file.indexOf('.js')) {
         require(path.join(modelPath, file));
@@ -69,6 +66,7 @@ require('fs').readdirSync(modelPath).forEach(function (file) {
  * router
  */
 
+var allowAccessControl = require('./middlewares/allowCrossOrigin');
+app.use(allowAccessControl);
 app.use(router(app));
-
 require('./controllers')(app);

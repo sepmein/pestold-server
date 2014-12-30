@@ -23,11 +23,10 @@ exports.auth = function*() {
             userName: userName
         }).exec()
             .on('err', function (e) {
-                context.throw(500, e);
+                return context.throw(500, e);
             });
 
     if (found) {
-        console.log(bcrypt.compare);
         try {
             var same = yield bcrypt.compare(password, found.password);
             if (same) {
@@ -37,10 +36,12 @@ exports.auth = function*() {
                     expiresInMinutes: '60 * 2'
                 });
             } else {
-                this.throw(401, 'password not match');
+                //console.log('password not match');
+                this.response.status = 401;
+                this.body = {message: 'password not match'};
             }
         } catch (e) {
-            console.error(e);
+            console.log('bcrypt compare failed: ', e);
             this.throw(500, e);
         }
 
