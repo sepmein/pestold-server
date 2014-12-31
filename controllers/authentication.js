@@ -16,15 +16,10 @@ exports.auth = function*() {
     let userName = requestBody.userName,
         password = requestBody.password;
 
-    let context = this;
-
     let found =
         yield User.findOne({
             userName: userName
-        }).exec()
-            .on('err', function (e) {
-                return context.throw(500, e);
-            });
+        }).exec();
 
     if (found) {
         try {
@@ -53,10 +48,19 @@ exports.auth = function*() {
     }
 };
 
-exports.signup = function*() {
-    var requestBody =
+exports.signup = function*(next) {
+    let requestBody =
         yield parse(this);
-    var user = new User({
+
+    let existed = yield User.findOne({userName: requestBody.userName}).exec();
+
+    if (existed) {
+        this.status = 403;
+        this.body = {message: 'user already existed'};
+        yield next;
+    }
+
+    let user = new User({
         userName: requestBody.userName,
         password: requestBody.password
     });
@@ -66,7 +70,11 @@ exports.signup = function*() {
 
     try {
         yield user.save();
-        this.body = user.token;
+        this.status = 201;
+        this.body = {
+            userName: requestBody.userName,
+            token: user.token
+        };
     }
     catch (error) {
         this.status = 400;
