@@ -48,7 +48,7 @@ exports.auth = function*() {
     }
 };
 
-exports.signup = function*(next) {
+exports.signup = function*() {
     let requestBody =
         yield parse(this);
 
@@ -57,7 +57,7 @@ exports.signup = function*(next) {
     if (existed) {
         this.status = 403;
         this.body = {message: 'user already existed'};
-        yield next;
+        return;
     }
 
     let user = new User({
