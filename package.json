@@ -30,6 +30,6 @@
   },
   "homepage": "https://github.com/sepmein/pestold-server",
   "devDependencies": {
-    "mocha": "^2.0.1"
+    "mocha": "latest"
   }
 }

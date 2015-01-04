@@ -1,19 +1,36 @@
 + css
-  + bootstrap
-  + less
+    + bootstrap
+    + less
 
 + javascript
-  + angular.js
+    + angular.js
 
 + node.js
-  + koa.js
-  + koa-static
-  + mongoose
+    + koa.js
+    + koa-router
+    + mongoose
+    + co
+    + co-body
+    + bcrypt
+    + jsonwebtoken
+
++ workflow
+    + yo
+    + bower
+    + gulp
 
 + dev:
-  + gulp.js
-  + mocha
+    + gulp.js
+    + mocha
 
 + mongodb
 
 + git
+    + git extras
+
++ ide
+    + webstorm
+    
++ api
+    + apiary.io
+    + apiblueprint
