@@ -3,18 +3,14 @@
  */
 'use strict';
 
-var parse = require('co-body'),
-    User = require('mongoose').model('User'),
+var User = require('mongoose').model('User'),
     bcrypt = require('../lib/bcrypt'),
     jwt = require('jsonwebtoken'),
     secret = process.env.JWT_SECRET || require('../config/secret');
 
 exports.auth = function*() {
-    let requestBody =
-        yield parse(this);
-
-    let userName = requestBody.userName,
-        password = requestBody.password;
+    let userName = this.request.body.userName,
+        password = this.request.body.password;
 
     let found =
         yield User.findOne({
@@ -26,7 +22,8 @@ exports.auth = function*() {
             var same = yield bcrypt.compare(password, found.password);
             if (same) {
                 this.body = jwt.sign({
-                    userName: userName
+                    userName: userName,
+                    _id: found._id
                 }, secret, {
                     expiresInMinutes: '60 * 2'
                 });
@@ -49,10 +46,10 @@ exports.auth = function*() {
 };
 
 exports.signup = function*() {
-    let requestBody =
-        yield parse(this);
+    let userName = this.request.body.userName,
+        password = this.request.body.password;
 
-    let existed = yield User.findOne({userName: requestBody.userName}).exec();
+    let existed = yield User.findOne({userName: userName}).exec();
 
     if (existed) {
         this.status = 403;
@@ -61,19 +58,23 @@ exports.signup = function*() {
     }
 
     let user = new User({
-        userName: requestBody.userName,
-        password: requestBody.password
+        userName: userName,
+        password: password
     });
 
-    // use jwt to generate token
-    user.token = jwt.sign(requestBody, secret);
-
     try {
-        yield user.save();
+        let saved = yield user.save();
+        // use jwt to generate token
+        let token = jwt.sign({
+            userName: userName,
+            _id: saved._id
+        }, secret, {
+            expiresInMinutes: '60 * 2'
+        });
         this.status = 201;
         this.body = {
-            userName: requestBody.userName,
-            token: user.token
+            userName: userName,
+            token: token
         };
     }
     catch (error) {
