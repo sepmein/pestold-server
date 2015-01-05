@@ -21,7 +21,7 @@ exports.listRecipes = function *(next) {
 exports.createRecipe = function *(next) {
     let _id = this.validate._id;
     //TODO: add validate function.
-    let recipe = new Recipe(this.request.body);
+    let recipe = new Recipe(this.request.body.recipe);
     recipe.createdBy = _id;
 
     try {
@@ -41,9 +41,10 @@ exports.createRecipe = function *(next) {
 
 // /vec/recipe/:id
 exports.getRecipe = function *(next) {
+    console.log('get recipe called');
     let id = this.params.id;
 
-    let found = yield Recipe.findOne({id: id}).exec();
+    let found = yield Recipe.findById(id).exec();
 
     if (!found) {
         this.status = 404;
@@ -85,7 +86,7 @@ exports.modifyRecipe = function *(next) {
         var modified = yield Recipe.findByIdAndUpdate(recipeId, this.request.body).exec();
         //debug
         //TODO delete it later
-        console.log(modified);
+        //console.log(modified);
         this.status = 200;
         this.body = {
             message: 'Modified successfully.'
@@ -126,7 +127,7 @@ exports.deleteRecipe = function *(next) {
         let removed = yield Recipe.remove().exec();
         //debug
         //TODO: remove it later
-        console.log('removed');
+        //console.log('removed');
         console.log(removed);
         this.status = 200;
         this.body = {

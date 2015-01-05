@@ -24,9 +24,7 @@ exports.auth = function*() {
                 this.body = jwt.sign({
                     userName: userName,
                     _id: found._id
-                }, secret, {
-                    expiresInMinutes: '60 * 2'
-                });
+                }, secret);
             } else {
                 //console.log('password not match');
                 this.status = 401;
@@ -68,9 +66,7 @@ exports.signup = function*() {
         let token = jwt.sign({
             userName: userName,
             _id: saved._id
-        }, secret, {
-            expiresInMinutes: '60 * 2'
-        });
+        }, secret);
         this.status = 201;
         this.body = {
             userName: userName,
