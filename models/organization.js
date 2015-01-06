@@ -55,4 +55,4 @@ var organizationSchema = mongoose.Schema({
 	}
 });
 
-mongoose.model('Organization', organizationSchema);
+module.exports = mongoose.model('Organization', organizationSchema);
