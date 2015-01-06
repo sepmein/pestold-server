@@ -31,10 +31,9 @@ function addController(app) {
     /**
      * organization
      */
-
+    app.get('/org/list', organization.list);
     app.get('/org/:id', organization.get);
     app.post('/org', parse, token.verify, organization.add);
-    app.get('/org/list', organization.list);
     app.get('/org/:id/staff', organization.listStaff);
 
     /*

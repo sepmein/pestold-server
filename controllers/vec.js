@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
     Recipe = mongoose.model('Recipe');
 
 // /vec/recipes
-exports.list = function list(next) {
+exports.list = function *(next) {
     this.body = yield Recipe.find({})
         .sort('-updatedAt')
         .exec();

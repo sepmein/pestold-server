@@ -3,12 +3,14 @@
  */
 'use strict';
 
-var Organization = require('mongoose').model('Organization');
+var Organization = require('mongoose').model('Organization'),
+    User = require('mongoose').model('User');
 
 exports.get = function *() {
     let id = this.params.id;
-    try{ let found = yield Organization.findById(id).exec();
-        if(found){
+    try {
+        let found = yield Organization.findById(id).exec();
+        if (found) {
             this.body = found;
         } else {
             this.status = 404;
@@ -17,7 +19,7 @@ exports.get = function *() {
             };
         }
     }
-    catch (error){
+    catch (error) {
         this.status = 400;
         this.body = {
             message: error.message
@@ -29,7 +31,7 @@ exports.add = function *() {
     let org = new Organization(this.request.body.organization);
     try {
         let saved = yield org.save();
-        if(saved){
+        if (saved) {
             this.body = {
                 _id: saved._id
             };
@@ -39,7 +41,7 @@ exports.add = function *() {
                 message: 'Some Error occurred. Save failed.'
             };
         }
-    } catch (error){
+    } catch (error) {
         this.status = 400;
         this.body = {
             message: error.message
@@ -48,8 +50,18 @@ exports.add = function *() {
 };
 
 exports.list = function *() {
-    Organization.find({});
+    console.log(11);
+    this.body = yield Organization.find({}).exec();
 };
+
 exports.listStaff = function *() {
-    Organization.find({});
+    let found = yield Organization.findById(this.params.id).select({_id: 1}).exec();
+    if (found) {
+        this.body = yield User.find({organization: found._id});
+    } else {
+        this.status = 404;
+        this.body = {
+            message: 'Organization does not exist.'
+        };
+    }
 };
