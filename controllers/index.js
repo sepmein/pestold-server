@@ -26,29 +26,26 @@ function addController(app) {
      * user
      */
 
-    app.get('/user/:id', token.verify, user.id);
+    app.get('/user/:id', token.verify, user.get);
 
     /**
      * organization
      */
 
-//app.get('/org/:id');
-//
-//app.post('/org');
-//
-//app.get('/org/list');
-//
-//app.get('/org/:id/staff');
+    app.get('/org/:id', organization.get);
+    app.post('/org', parse, token.verify, organization.add);
+    app.get('/org/list', organization.list);
+    app.get('/org/:id/staff', organization.listStaff);
 
     /*
      * vec recipes
      * */
 
-    app.get('/vec/recipes', vec.listRecipes);
-    app.post('/vec/recipe', parse, token.verify, vec.createRecipe);
-    app.get('/vec/recipe/:id', vec.getRecipe);
-    app.post('/vec/recipe/:id', parse, token.verify, vec.modifyRecipe);
-    app.del('/vec/recipe/:id', token.verify, vec.deleteRecipe);
+    app.get('/vec/recipes', vec.list);
+    app.post('/vec/recipe', parse, token.verify, vec.add);
+    app.get('/vec/recipe/:id', vec.get);
+    app.post('/vec/recipe/:id', parse, token.verify, vec.modify);
+    app.del('/vec/recipe/:id', token.verify, vec.delete);
 }
 
 

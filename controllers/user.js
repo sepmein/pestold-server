@@ -5,7 +5,7 @@
 
 var User = require('mongoose').model('User');
 
-exports.id = function*() {
+exports.get = function*() {
     let user =
         yield User
             .findOne(this.validate.userName)

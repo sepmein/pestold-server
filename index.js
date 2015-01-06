@@ -34,19 +34,6 @@ db.once('open', function () {
     console.log('app started!');
 });
 
-//double check the db connection.
-app.use(function*(next) {
-    if (db) {
-        this.db = db;
-        yield next;
-    } else {
-        this.response.status = 500;
-        this.body = {
-            message: '服务器数据库无法连接'
-        };
-    }
-});
-
 //app.on('error', function (error) {
 //    console.error(error);
 //});

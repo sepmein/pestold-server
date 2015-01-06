@@ -1,6 +1,6 @@
 'use strict';
 
-//app.get('/vec/recipes', vec.listRecipes);
+//app.get('/vec/recipes', vec.list);
 //app.post('/vec/recipe', token.verify, vec.createRecipe);
 //app.get('/vec/recipe/:id', vec.getRecipe);
 //app.post('/vec/recipe/:id', token.verify, vec.modifyRecipe);
@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
     Recipe = mongoose.model('Recipe');
 
 // /vec/recipes
-exports.listRecipes = function *(next) {
+exports.list = function list(next) {
     this.body = yield Recipe.find({})
         .sort('-updatedAt')
         .exec();
@@ -18,7 +18,7 @@ exports.listRecipes = function *(next) {
 };
 
 // /vec/recipe
-exports.createRecipe = function *(next) {
+exports.add = function *(next) {
     let _id = this.validate._id;
     //TODO: add validate function.
     let recipe = new Recipe(this.request.body.recipe);
@@ -40,7 +40,7 @@ exports.createRecipe = function *(next) {
 };
 
 // /vec/recipe/:id
-exports.getRecipe = function *(next) {
+exports.get = function *(next) {
     console.log('get recipe called');
     let id = this.params.id;
 
@@ -59,7 +59,7 @@ exports.getRecipe = function *(next) {
     yield next;
 };
 
-exports.modifyRecipe = function *(next) {
+exports.modify = function *(next) {
     let recipeId = this.params.id,
         userId = this.validate._id;
 
@@ -101,7 +101,7 @@ exports.modifyRecipe = function *(next) {
     yield next;
 };
 
-exports.deleteRecipe = function *(next) {
+exports.delete = function *(next) {
     let recipeId = this.params.id,
         userId = this.validate._id;
 
