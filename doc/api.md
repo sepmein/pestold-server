@@ -135,7 +135,7 @@ HOST: http://api.pestold.com
 
 + response 200 (application/json)
 
-+ request unauth (application/json)
++ request unAuth (application/json)
 未认证的用户
 
     + body

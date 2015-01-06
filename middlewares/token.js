@@ -13,8 +13,7 @@ exports.verify = function * (next) {
         this.body = {message: 'unauthorized, required token'};
     } else {
         try {
-            let validate = yield jwt.verify(token);
-            this.validate = validate;
+            this.validate = yield jwt.verify(token);
             yield next;
         }
         catch (e) {

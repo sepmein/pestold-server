@@ -11,7 +11,10 @@ var Organization = require('./models/organization');
 
 var formatted = [];
 
-for (var i = data.length - 1; i--; i > 0) {
+console.info('[Start] Ready to Import ' + data.length + ' Records Totally.');
+console.info('Importing....');
+
+for (var i = 0; i < data.length; i++) {
     var d = data[i];
     //console.log(d.cn.artificialPerson);
     //console.log(d.validityDate);
@@ -37,12 +40,14 @@ for (var i = data.length - 1; i--; i > 0) {
     from = new Date(Date.parse(from));
     to = new Date(Date.parse(to));
 
-    if (d.cn.artificialPerson.indexOf(' ') === '-1') {
-        var tempPerson = d.cn.artificialPerson.split(' ');
-        juristicPersonCn = String.prototype.concat(tempPerson[0], tempPerson[1]);
+    if (~d.cn.artificialPerson.trim().indexOf(' ')) { // jshint ignore:line
+        var tempPerson = d.cn.artificialPerson.trim().split(' ');
+        //console.log(tempPerson);
+        juristicPersonCn = String.prototype.concat(tempPerson[0], tempPerson[tempPerson.length - 1]);
     } else {
         juristicPersonCn = d.cn.artificialPerson;
     }
+    //console.log(juristicPersonCn);
 
     presentationDate = new Date(Date.parse(d.en.presentationDate));
 
@@ -69,21 +74,24 @@ for (var i = data.length - 1; i--; i > 0) {
 
 console.log(formatted.length);
 
-function handler(err, data) {
+function handler(err) {
     if (err) {
         throw err;
-    } else {
-        console.log(data);
     }
 }
 connection.on('error', function (error) {
-    console.log(error);
+    console.error(error);
 });
 
+var count = 0;
+
 connection.once('open', function () {
-    for (var j = formatted.length - 1; j--; j > 0) {
+    for (var j = 0; j < formatted.length; j++) {
+        count++;
         var saveJtoOrg = new Organization(formatted[j]);
         saveJtoOrg.save(handler);
     }
+    console.info('[End] Imported ' + count + ' Records into MongoDB.');
+    console.info('Import finished, press Ctrl+C to quit');
 });
 
